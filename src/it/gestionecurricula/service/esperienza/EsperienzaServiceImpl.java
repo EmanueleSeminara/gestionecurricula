@@ -1,7 +1,9 @@
 package it.gestionecurricula.service.esperienza;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.gestionecurricula.connection.MyConnection;
@@ -87,8 +89,24 @@ public class EsperienzaServiceImpl implements EsperienzaService {
 
 			// inietto la connection nel dao
 			esperienzaDao.setConnection(connection);
+			System.out.println(input.getCurriculum().getId());
+			List<Esperienza> esperienzePresenti = esperienzaDao.searchAllByCurriculumId(input.getCurriculum().getId());
+			System.out.println(esperienzePresenti.size());
 
-			// eseguo quello che realmente devo fare
+			for (Esperienza esperienzaItem : esperienzePresenti) {
+				if (esperienzaItem.getDataFine() == null) {
+					esperienzaItem.setDataFine(input.getDataInizio());
+					esperienzaDao.update(esperienzaItem);
+				}
+			}
+
+			for (Esperienza esperienzaItem : esperienzePresenti) {
+				System.out.println(esperienzaItem);
+				if (esperienzaItem.getDataFine().after(input.getDataInizio())
+						|| esperienzaItem.getDataInizio().before(input.getDataFine())) {
+					throw new Exception("Il periodo dell'esperienza inserita va in conflitto con le altre.");
+				}
+			}
 			result = esperienzaDao.insert(input);
 
 		} catch (Exception e) {

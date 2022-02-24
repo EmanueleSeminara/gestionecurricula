@@ -1,6 +1,6 @@
 package it.gestionecurricula.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +28,15 @@ public class Curriculum {
 		this.telefono = telefono;
 		this.email = email;
 		this.esperienza = esperienza;
+	}
+
+	public Curriculum(String nome, String cognome, Date dataDiNascita, String telefono, String email) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataDiNascita = dataDiNascita;
+		this.telefono = telefono;
+		this.email = email;
 	}
 
 	public Long getId() {

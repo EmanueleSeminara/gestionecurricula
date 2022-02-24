@@ -1,6 +1,6 @@
 package it.gestionecurricula.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 public class Esperienza {
@@ -9,18 +9,31 @@ public class Esperienza {
 	private Date dataInizio;
 	private Date dataFine;
 	private String conoscenzeAquisite;
+	private Curriculum curriculum;
 
 	public Esperienza() {
 		super();
 	}
 
-	public Esperienza(Long id, String descrizione, Date dataInizio, Date dataFine, String conoscenzeAquisite) {
+	public Esperienza(Long id, String descrizione, Date dataInizio, Date dataFine, String conoscenzeAquisite,
+			Curriculum curriculum) {
 		super();
 		this.id = id;
 		this.descrizione = descrizione;
 		this.dataInizio = dataInizio;
 		this.dataFine = dataFine;
 		this.conoscenzeAquisite = conoscenzeAquisite;
+		this.curriculum = curriculum;
+	}
+
+	public Esperienza(String descrizione, Date dataInizio, Date dataFine, String conoscenzeAquisite,
+			Curriculum curriculum) {
+		super();
+		this.descrizione = descrizione;
+		this.dataInizio = dataInizio;
+		this.dataFine = dataFine;
+		this.conoscenzeAquisite = conoscenzeAquisite;
+		this.curriculum = curriculum;
 	}
 
 	public Long getId() {
@@ -63,9 +76,17 @@ public class Esperienza {
 		this.conoscenzeAquisite = conoscenzeAquisite;
 	}
 
+	public Curriculum getCurriculum() {
+		return curriculum;
+	}
+
+	public void setCurriculum(Curriculum curriculum) {
+		this.curriculum = curriculum;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(conoscenzeAquisite, dataFine, dataInizio, descrizione, id);
+		return Objects.hash(conoscenzeAquisite, curriculum, dataFine, dataInizio, descrizione, id);
 	}
 
 	@Override
@@ -77,9 +98,16 @@ public class Esperienza {
 		if (getClass() != obj.getClass())
 			return false;
 		Esperienza other = (Esperienza) obj;
-		return Objects.equals(conoscenzeAquisite, other.conoscenzeAquisite) && Objects.equals(dataFine, other.dataFine)
+		return Objects.equals(conoscenzeAquisite, other.conoscenzeAquisite)
+				&& Objects.equals(curriculum, other.curriculum) && Objects.equals(dataFine, other.dataFine)
 				&& Objects.equals(dataInizio, other.dataInizio) && Objects.equals(descrizione, other.descrizione)
 				&& Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Esperienza [id=" + id + ", descrizione=" + descrizione + ", dataInizio=" + dataInizio + ", dataFine="
+				+ dataFine + ", conoscenzeAquisite=" + conoscenzeAquisite + ", curriculum=" + curriculum + "]";
 	}
 
 }

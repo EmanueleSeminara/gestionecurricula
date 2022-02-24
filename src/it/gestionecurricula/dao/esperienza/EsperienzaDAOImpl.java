@@ -3,6 +3,7 @@ package it.gestionecurricula.dao.esperienza;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,11 +106,12 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 
 		int result = 0;
 		try (PreparedStatement ps = connection.prepareStatement(
-				"INSERT INTO esperienza (conoscenzeacquisite, descrizione, datafine, datainizio) VALUES (?, ?, ?, ?);")) {
+				"INSERT INTO esperienza (conoscenzeacquisite, descrizione, datafine, datainizio, curriculum_id) VALUES (?, ?, ?, ?, ?);")) {
 			ps.setString(1, esperienzaInput.getConoscenzeAquisite());
 			ps.setString(2, esperienzaInput.getDescrizione());
 			ps.setDate(3, new java.sql.Date(esperienzaInput.getDataFine().getTime()));
 			ps.setDate(4, new java.sql.Date(esperienzaInput.getDataInizio().getTime()));
+			ps.setLong(5, esperienzaInput.getCurriculum().getId());
 			result = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -183,6 +185,37 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 	@Override
 	public void setConnection(Connection connection) {
 		this.connection = connection;
+	}
+
+	@Override
+	public List<Esperienza> searchAllByCurriculumId(Long curriculumIdInput) throws Exception {
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		ArrayList<Esperienza> result = new ArrayList<Esperienza>();
+		Esperienza esperienzaTemp = null;
+
+		try (PreparedStatement ps = connection.prepareStatement("select * from esperienza where curriculum_id=?")) {
+
+			ps.setLong(1, curriculumIdInput);
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+					esperienzaTemp = new Esperienza();
+					esperienzaTemp.setConoscenzeAquisite(rs.getString("conoscenzeacquisite"));
+					esperienzaTemp.setDataFine(rs.getDate("datafine"));
+					esperienzaTemp.setDataInizio(rs.getDate("datainizio"));
+					esperienzaTemp.setDescrizione(rs.getString("descrizione"));
+					esperienzaTemp.setId(rs.getLong("ID"));
+					result.add(esperienzaTemp);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
 	}
 
 }
