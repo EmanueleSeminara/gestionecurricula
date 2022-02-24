@@ -20,7 +20,7 @@ public class TestCurriculum {
 
 			// ora con il service posso fare tutte le invocazioni che mi servono
 
-			// testInserimentoNuovaEsperienza(esperienzaService, curriculumService);
+			testInserimentoNuovaEsperienza(esperienzaService, curriculumService);
 			System.out.println("In tabella ESPERIENZA ci sono " + esperienzaService.listAll().size() + " elementi.");
 
 			testRimozioneCurriculum(esperienzaService, curriculumService);
