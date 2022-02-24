@@ -19,10 +19,12 @@ public class TestCurriculum {
 		try {
 
 			// ora con il service posso fare tutte le invocazioni che mi servono
-			System.out.println("In tabella ci sono " + esperienzaService.listAll().size() + " elementi.");
 
-			testInserimentoNuovaEsperienza(esperienzaService, curriculumService);
-			System.out.println("In tabella ci sono " + esperienzaService.listAll().size() + " elementi.");
+			// testInserimentoNuovaEsperienza(esperienzaService, curriculumService);
+			System.out.println("In tabella ESPERIENZA ci sono " + esperienzaService.listAll().size() + " elementi.");
+
+			testRimozioneCurriculum(esperienzaService, curriculumService);
+			System.out.println("In tabella CURRICULUM ci sono " + curriculumService.listAll().size() + " elementi.");
 
 			// E TUTTI I TEST VANNO FATTI COSI'
 
@@ -41,12 +43,29 @@ public class TestCurriculum {
 			throw new Exception("Nessun curriculum presente nel db");
 		Curriculum curriculumInserito = elencoCurricula.get(elencoCurricula.size() - 1);
 		Esperienza newEsperienzaInstance = new Esperienza("mauro",
-				new SimpleDateFormat("dd-MM-yyyy").parse("02-01-2022"),
-				new SimpleDateFormat("dd-MM-yyyy").parse("10-01-2022"), "bobobo", curriculumInserito);
+				new SimpleDateFormat("dd-MM-yyyy").parse("02-03-2022"),
+				new SimpleDateFormat("dd-MM-yyyy").parse("10-03-2022"), "bobobo", curriculumInserito);
 		if (esperienzaService.inserisciNuovo(newEsperienzaInstance) != 1)
 			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
 
 		System.out.println(".......testInserimentoNuovaEsperienza PASSED.............");
+	}
+
+	private static void testRimozioneCurriculum(EsperienzaService esperienzaService,
+			CurriculumService curriculumService) throws Exception {
+		System.out.println(".......testRimozioneCurriculum inizio.............");
+		// recupero tutti gli user
+		List<Curriculum> interoContenutoTabella = curriculumService.listAll();
+		if (interoContenutoTabella.isEmpty() || interoContenutoTabella.get(0) == null)
+			throw new Exception("Non ho nulla da rimuovere");
+
+		Long idDelPrimo = interoContenutoTabella.get(0).getId();
+		// ricarico per sicurezza con l'id individuato
+		Curriculum toBeRemoved = curriculumService.findById(idDelPrimo);
+		if (curriculumService.rimuovi(toBeRemoved) != 1)
+			throw new RuntimeException("testRimozioneUser FAILED ");
+
+		System.out.println(".......testRimozioneCurriculum PASSED.............");
 	}
 
 }

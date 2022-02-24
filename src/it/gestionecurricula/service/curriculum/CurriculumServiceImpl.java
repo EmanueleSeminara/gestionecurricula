@@ -7,11 +7,15 @@ import java.util.List;
 import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
 import it.gestionecurricula.dao.curriculum.CurriculumDAO;
+import it.gestionecurricula.dao.esperienza.EsperienzaDAO;
+import it.gestionecurricula.dao.esperienza.EsperienzaDAOImpl;
 import it.gestionecurricula.model.Curriculum;
+import it.gestionecurricula.model.Esperienza;
 
 public class CurriculumServiceImpl implements CurriculumService {
 
 	private CurriculumDAO curriculumDao;
+	private EsperienzaDAO esperienzaDao = new EsperienzaDAOImpl();
 
 	@Override
 	public void setCurriculumDao(CurriculumDAO curriculumDao) {
@@ -109,6 +113,12 @@ public class CurriculumServiceImpl implements CurriculumService {
 
 			// inietto la connection nel dao
 			curriculumDao.setConnection(connection);
+			esperienzaDao.setConnection(connection);
+
+			List<Esperienza> elencoEsperienze = esperienzaDao.searchAllByCurriculumId(input.getId());
+			if (elencoEsperienze.size() > 0) {
+				throw new RuntimeException("Impossibile eliminare il curriculum, sono presenti delle esperienze");
+			}
 
 			// eseguo quello che realmente devo fare
 			result = curriculumDao.delete(input);
